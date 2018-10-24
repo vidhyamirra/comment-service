@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "sbb.spamwords.filename",
+  "type": "java.lang.String",
+  "description": "A description for 'sbb.spamwords.filename'"
+}]}

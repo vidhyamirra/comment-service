@@ -1,177 +1,45 @@
 package com.vidhya.model;
 
+import java.time.Instant;
 
-import java.io.Serializable;
-import java.util.Calendar;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
+@Data
+@AllArgsConstructor
+@Document(collection="commentModel")
+public class CommentModel {
 
-import com.vidhya.comment.utils.UtcCalendarType;
-
-@Entity  //tells Hibernate and Spring that this is our Entity class
-@Table(
-        name = "comment_model",
-        indexes = {
-                @Index(
-                        name = "idx_pageId",
-                        columnList = "pageId"
-                )
-        }
-)
-
-@TypeDefs({
-        @TypeDef(name = "calendarUTC",
-                typeClass = UtcCalendarType.class,
-                defaultForType = Calendar.class)
-})
-
-
-
-public class CommentModel implements Serializable {
-
-    @Id //unique ID of our CommentModel
-    @Column(length = 36)
+   	@Id
     private String id;
-
-    //A version ID used by Hibernate for optimistic locking
-    @Version
-    private Integer version;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Type(type = "calendarUTC")
-    private Calendar lastModificationDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Type(type = "calendarUTC")
-    private Calendar creationDate;
-
-    @Column(length = 32)
+    
     private String pageId;
+    
+    private String name;
 
-    @Column(length = 32)
-    private String username;
-
-    @Column(length = 32)
     private String emailAddress;
-
-    @Column
-    private boolean spam;
-
-    public boolean isSpam() {
-        return spam;
-    }
-
-    public void setSpam(boolean spam) {
-        this.spam = spam;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    @Column(columnDefinition = "TEXT")
+    
     private String comment;
 
-    public boolean equal(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof CommentModel)) {
-            return false;
-        }
+    private boolean spam;
+    
+    @CreatedBy
+    private String username;
 
-        CommentModel other = (CommentModel) o;
+    @CreatedDate
+    private Instant createdDate;
 
-        // if the id is missing, return false
-        if (id == null) {
-            return false;
-        }
+    @LastModifiedBy
+    private String lastModifiedUser;
 
-        // equivalence by id
-        return id.equals(other.getId());
-    }
+    @LastModifiedDate
+    private Instant lastModifiedDate;
 
-    public String getComment() {
-        return comment;
-    }
-
-    public Calendar getCreationDate() {
-        return creationDate;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Calendar getLastModificationDate() {
-        return getLastModificationDate();
-    }
-
-    public String getPageId() {
-        return pageId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public int hashCode() {
-        if (id != null) {
-            return id.hashCode();
-        } else {
-            return super.hashCode();
-        }
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public void setCreationDate(Calendar creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setLastModificationDate(Calendar lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
-    }
-
-    public void setPageId(String pageId) {
-        this.pageId = pageId;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }
